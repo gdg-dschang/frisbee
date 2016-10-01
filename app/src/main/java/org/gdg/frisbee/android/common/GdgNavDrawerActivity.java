@@ -33,6 +33,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+
 import org.gdg.frisbee.android.Const;
 import org.gdg.frisbee.android.R;
 import org.gdg.frisbee.android.about.AboutActivity;
@@ -331,6 +333,14 @@ public abstract class GdgNavDrawerActivity extends GdgActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        if (PrefUtils.isSignedIn(this)) {
+            silentSignIn();
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
@@ -341,10 +351,16 @@ public abstract class GdgNavDrawerActivity extends GdgActivity {
     }
 
     @Override
+    protected void onSignInResult(GoogleSignInResult googleSignInResult) {
+        updateUserPicture(googleSignInResult);
+    }
+
+    @Override
     public void onConnected(final Bundle bundle) {
         super.onConnected(bundle);
-        updateUserPicture();
-
+        if (!PrefUtils.isSignedIn(this)) {
+            updateUserPicture(null);
+        }
         if (drawerItemIdToNavigateAfterSignIn != INVALID_ITEM_ID) {
             onDrawerItemClick(drawerItemIdToNavigateAfterSignIn);
             drawerItemIdToNavigateAfterSignIn = INVALID_ITEM_ID;
@@ -370,14 +386,15 @@ public abstract class GdgNavDrawerActivity extends GdgActivity {
         }
     }
 
-    private void updateUserPicture() {
-        if (!PrefUtils.isSignedIn(this)) {
+    private void updateUserPicture(GoogleSignInResult googleSignInResult) {
+        if (!PrefUtils.isSignedIn(this) || googleSignInResult == null || !googleSignInResult.isSuccess()) {
             mDrawerUserPicture.setImageDrawable(null);
             return;
         }
-        final String gplusId = PlusUtils.getCurrentPersonId(getGoogleApiClient());
-        if (gplusId != null) {
-            App.getInstance().getPicasso().load(PlusUtils.createProfileUrl(gplusId))
+
+        Uri photoUrl = PlusUtils.getPhotoUrl(googleSignInResult);
+        if (photoUrl != null) {
+            App.getInstance().getPicasso().load(photoUrl)
                 .transform(new BitmapBorderTransformation(2,
                     getResources().getDimensionPixelSize(R.dimen.navdrawer_user_picture_size) / 2,
                     ContextCompat.getColor(this, R.color.white)))

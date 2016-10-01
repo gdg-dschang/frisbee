@@ -94,13 +94,13 @@ public class FirstStartStep2Fragment extends BaseFragment {
     }
 
     @OnClick(R.id.googleSignin)
-    public void onSignedIn() {
-        listener.onSignedIn();
+    public void onSignInClicked() {
+        listener.onSignIn();
     }
 
     @OnClick(R.id.skipSignin)
     public void onSkippedSignIn() {
-        listener.onSkippedSignIn();
+        listener.onSkipSignIn();
     }
 
     public void loadInvite(Invite inviteSender) {
@@ -166,17 +166,17 @@ public class FirstStartStep2Fragment extends BaseFragment {
     }
 
     public interface Step2Listener {
-        void onSignedIn();
+        void onSignIn();
 
-        void onSkippedSignIn();
+        void onSkipSignIn();
 
         Step2Listener EMPTY = new Step2Listener() {
             @Override
-            public void onSignedIn() {
+            public void onSignIn() {
             }
 
             @Override
-            public void onSkippedSignIn() {
+            public void onSkipSignIn() {
             }
         };
     }

@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
@@ -24,5 +25,9 @@ public class PlusUtils {
 
     public static Uri createProfileUrl(@NonNull final String gplusId) {
         return Uri.parse("https://plus.google.com/" + gplusId);
+    }
+
+    public static Uri getPhotoUrl(GoogleSignInResult googleSignInResult) {
+        return googleSignInResult.getSignInAccount().getPhotoUrl();
     }
 }

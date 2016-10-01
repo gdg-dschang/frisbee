@@ -31,6 +31,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.appinvite.AppInvite;
 import com.google.android.gms.appinvite.AppInviteInvitationResult;
 import com.google.android.gms.appinvite.AppInviteReferral;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -160,7 +161,7 @@ public class FirstStartActivity extends GdgActivity implements
     }
 
     @Override
-    public void onSignedIn() {
+    public void onSignIn() {
         PrefUtils.setSignedIn(this);
         recreateGoogleApiClientIfNeeded();
 
@@ -220,7 +221,7 @@ public class FirstStartActivity extends GdgActivity implements
     }
 
     @Override
-    public void onSkippedSignIn() {
+    public void onSkipSignIn() {
         PrefUtils.setLoggedOut(this);
 
         moveToStep3(false);
@@ -237,10 +238,14 @@ public class FirstStartActivity extends GdgActivity implements
     public void onComplete(final boolean enableAnalytics, final boolean enableGcm) {
         PrefUtils.setInitialSettings(FirstStartActivity.this, enableAnalytics);
         requestBackup();
+        startSignInDialog();
+    }
 
-        startMainActivity();
-
-        finish();
+    public void onSignInResult(GoogleSignInResult signInResult) {
+        if (signInResult.isSuccess()) {
+            startMainActivity();
+            finish();
+        }
     }
 
     private void requestBackup() {

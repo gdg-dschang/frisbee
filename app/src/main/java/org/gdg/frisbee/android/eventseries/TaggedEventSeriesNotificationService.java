@@ -38,7 +38,7 @@ public class TaggedEventSeriesNotificationService extends Service
     @Override
     public void onCreate() {
         super.onCreate();
-        apiClient = GoogleApiClientFactory.createWith(this);
+        apiClient = GoogleApiClientFactory.createWith(this, true);
         apiClient.registerConnectionCallbacks(this);
         apiClient.registerConnectionFailedListener(this);
         apiClient.connect();
