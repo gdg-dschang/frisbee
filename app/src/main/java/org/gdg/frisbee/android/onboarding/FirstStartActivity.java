@@ -238,7 +238,9 @@ public class FirstStartActivity extends GdgActivity implements
     public void onComplete(final boolean enableAnalytics, final boolean enableGcm) {
         PrefUtils.setInitialSettings(FirstStartActivity.this, enableAnalytics);
         requestBackup();
-        startSignInDialog();
+        if (PrefUtils.isSignedIn(this)) {
+            startSignInDialog();
+        }
     }
 
     public void onSignInResult(GoogleSignInResult signInResult) {

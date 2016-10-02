@@ -30,10 +30,13 @@ import android.view.ViewGroup;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.plus.Plus;
 
 import org.gdg.frisbee.android.R;
@@ -152,6 +155,13 @@ public class SettingsFragment extends PreferenceFragment {
                             createConnectedGoogleApiClient();
                         } else {
                             if (mGoogleApiClient.isConnected()) {
+                                Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                                    new ResultCallback<Status>() {
+                                        @Override
+                                        public void onResult(Status status) {
+                                            // ...
+                                        }
+                                    });
                                 Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
                                 disconnectGoogleApiClient();
                             }
@@ -187,7 +197,9 @@ public class SettingsFragment extends PreferenceFragment {
     private void disconnectGoogleApiClient() {
         mGoogleApiClient.unregisterConnectionCallbacks((SettingsActivity) getActivity());
         mGoogleApiClient.unregisterConnectionFailedListener((SettingsActivity) getActivity());
+        mGoogleApiClient.stopAutoManage((GdgActivity) getActivity());
         mGoogleApiClient.disconnect();
+
     }
 
     private void setHomeGdg(final String homeGdg) {

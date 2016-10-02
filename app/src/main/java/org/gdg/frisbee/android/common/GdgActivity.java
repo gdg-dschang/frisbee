@@ -278,7 +278,7 @@ public abstract class GdgActivity extends TrackableActivity implements
         }
     }
 
-    protected void startSignInDialog() {
+    public void startSignInDialog() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }

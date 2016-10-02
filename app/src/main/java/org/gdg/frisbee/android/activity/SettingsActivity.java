@@ -17,11 +17,13 @@
 package org.gdg.frisbee.android.activity;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.MenuItem;
 
 import org.gdg.frisbee.android.R;
 import org.gdg.frisbee.android.common.GdgActivity;
 import org.gdg.frisbee.android.fragment.SettingsFragment;
+import org.gdg.frisbee.android.utils.PrefUtils;
 
 public class SettingsActivity extends GdgActivity {
 
@@ -57,4 +59,10 @@ public class SettingsActivity extends GdgActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onConnected(@Nullable Bundle connectionHint) {
+        if (PrefUtils.isSignedIn(this)) {
+            startSignInDialog();
+        }
+    }
 }

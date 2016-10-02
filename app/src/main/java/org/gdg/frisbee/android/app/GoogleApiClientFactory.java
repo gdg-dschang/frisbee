@@ -9,6 +9,7 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.Api;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.plus.Plus;
 
 import org.gdg.frisbee.android.common.GdgActivity;
 import org.gdg.frisbee.android.utils.PrefUtils;
@@ -35,6 +36,7 @@ public final class GoogleApiClientFactory {
     private static GoogleApiClient.Builder createBuilder(Context context, boolean withSignIn,
                                                          boolean enableAutoManage) {
         GoogleApiClient.Builder builder = new GoogleApiClient.Builder(context)
+            .addApi(Plus.API)
             .addApi(AppIndex.API);
 
         if (context instanceof GdgActivity && enableAutoManage) {
